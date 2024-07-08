@@ -1,8 +1,9 @@
 package com.pokemonreview.api.repository;
 
 import com.pokemonreview.api.models.Pokemon;
-import com.pokemonreview.api.models.Review;
-import org.assertj.core.api.Assertions;
+
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -15,5 +16,8 @@ import java.util.Optional;
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class ReviewRepositoryTests {
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
 }

@@ -3,7 +3,6 @@ package com.pokemonreview.api.repository;
 import com.pokemonreview.api.models.Pokemon;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
