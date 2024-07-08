@@ -17,7 +17,6 @@ public class PokemonRepositoryTests {
 
     @Autowired
     private PokemonRepository pokemonRepository;
-
     @Test
     public void save_validInput_returnCorrectResult(){
         // arrange
