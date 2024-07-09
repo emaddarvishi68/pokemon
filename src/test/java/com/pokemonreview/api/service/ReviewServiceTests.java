@@ -27,5 +27,46 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ReviewServiceTests {
 
+    @Mock
+    private PokemonRepository pokemonRepository;
+
+    @Mock
+    private ReviewRepository reviewRepository;
+
+    @InjectMocks
+    private ReviewServiceImpl reviewService;
+
+
+    private Pokemon pokemon;
+    private PokemonDto pokemonDto;
+    private Review review;
+    private ReviewDto reviewDto;
+
+    @BeforeEach
+    public void init(){
+        pokemon = Pokemon.builder()
+                .name("pikachu")
+                .type("electric")
+                .build();
+
+        pokemonDto = PokemonDto.builder()
+                .name("pikachu")
+                .type("electric")
+                .build();
+
+        review = Review.builder()
+                .title("title")
+                .content("content")
+                .stars(5)
+                .build();
+
+        reviewDto = ReviewDto.builder()
+                .title("tets title")
+                .content("test content")
+                .stars(5)
+                .build();
+    }
+
+
 
 }
