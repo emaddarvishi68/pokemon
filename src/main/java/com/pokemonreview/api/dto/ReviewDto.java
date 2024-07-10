@@ -1,5 +1,6 @@
 package com.pokemonreview.api.dto;
 
+import com.pokemonreview.api.models.Pokemon;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,5 @@ public class ReviewDto {
     private String title;
     private String content;
     private int stars;
+    private int pokemonId;
 }
