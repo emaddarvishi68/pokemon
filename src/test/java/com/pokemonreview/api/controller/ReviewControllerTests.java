@@ -33,4 +33,124 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc(addFilters = false)
 public class ReviewControllerTests {
 
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private ReviewService reviewService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private Pokemon pokemon;
+    private PokemonDto pokemonDto;
+    private Review review;
+    private ReviewDto reviewDto;
+
+    @BeforeEach
+    public void init() {
+        pokemon = Pokemon.builder()
+                .name("pikachu")
+                .type("electric")
+                .build();
+
+        pokemonDto = PokemonDto.builder()
+                .name("pikachu")
+                .type("electric")
+                .build();
+
+        review = Review.builder()
+                .title("title")
+                .content("content")
+                .stars(5)
+                .pokemon(pokemon)
+                .build();
+
+        reviewDto = ReviewDto.builder()
+                .title("tets title")
+                .content("test content")
+                .stars(5)
+                .pokemonId(pokemon.getId())
+                .build();
+    }
+
+    @Test
+    public void getReviewsByPokemonId_validInput_returnReviewDto() throws Exception {
+        int pokemonId = 1;
+        when(reviewService.getReviewsByPokemonId(pokemonId))
+                .thenReturn(Arrays.asList(reviewDto));
+
+        ResultActions response = mockMvc
+                .perform(get("/api/pokemon/" + pokemonId + "/reviews")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(pokemonDto)));
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()"
+                        , CoreMatchers.is(Arrays.asList(reviewDto).size())));
+
+    }
+
+    @Test
+    public void updateReview_validInput_returnReviewDto() throws Exception {
+        int pokemonId = 1;
+        int reviewId = 1;
+
+        when(reviewService.updateReview(pokemonId, reviewId, reviewDto)).thenReturn(reviewDto);
+
+        ResultActions response = mockMvc.perform(put("/api/pokemon/1/reviews/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewDto)));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", CoreMatchers.is(reviewDto.getContent())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title", CoreMatchers.is(reviewDto.getTitle())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.stars", CoreMatchers.is(reviewDto.getStars())));
+
+    }
+
+    @Test
+    public void createReview_validInput_returnReviewDto() throws Exception {
+        int pokemonId = 1;
+        when(reviewService.createReview(pokemonId, reviewDto)).thenReturn(reviewDto);
+
+        ResultActions response = mockMvc.perform(post("/api/pokemon/" + pokemonId + "/reviews")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewDto)));
+
+        response.andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title", CoreMatchers.is(reviewDto.getTitle())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", CoreMatchers.is(reviewDto.getContent())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.stars", CoreMatchers.is(reviewDto.getStars())));
+    }
+
+    @Test
+    public void getReviewId_validInput_returnReviewDto() throws Exception {
+        int pokemonId = 1;
+        int reviewId = 1;
+        when(reviewService.getReviewById(reviewId, pokemonId)).thenReturn(reviewDto);
+
+        ResultActions response = mockMvc.perform(get("/api/pokemon/" + pokemonId + "/reviews/" + reviewId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title", CoreMatchers.is(reviewDto.getTitle())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", CoreMatchers.is(reviewDto.getContent())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.stars", CoreMatchers.is(reviewDto.getStars())));
+
+    }
+
+    @Test
+    public void deleteReview_validInput_returnVoid() throws Exception{
+        int pokemonId = 1;
+        int reviewId = 1;
+
+        doNothing().when(reviewService).deleteReview(pokemonId,reviewId);
+
+        ResultActions response = mockMvc.perform(delete("/api/pokemon/"+pokemonId+"/reviews/"+reviewId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
 }

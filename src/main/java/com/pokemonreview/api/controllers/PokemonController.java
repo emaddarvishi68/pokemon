@@ -24,7 +24,7 @@ public class PokemonController {
     }
 
     @GetMapping("pokemon")
-    public ResponseEntity<PokemonResponse> getPokemons(
+    public ResponseEntity<PokemonResponse> getAllPokemon(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ) {
@@ -34,7 +34,6 @@ public class PokemonController {
     @GetMapping("pokemon/{id}")
     public ResponseEntity<PokemonDto> pokemonDetail(@PathVariable int id) {
         return ResponseEntity.ok(pokemonService.getPokemonById(id));
-
     }
 
     @PostMapping("pokemon/create")
